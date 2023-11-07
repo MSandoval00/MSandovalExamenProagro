@@ -1,0 +1,44 @@
+﻿@model ML.Usuario
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="container text-center">
+    <h2>Formulario para registrar un usuario</h2>
+</div>
+<hr />
+<div class="container">
+    @using(Html.BeginForm("Form","Usuario",FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+    <div class="row">
+        @Html.HiddenFor(model=> Model.IdUsuario)
+        <div class="col-md-3">
+            @Html.LabelFor(model=>Model.Nombre)
+            @Html.TextBoxFor(model=> Model.Nombre, new {@class="form-control"})
+        </div>
+        <div class="col-md-3">
+            @{
+                var fechaIngreso = Model.FechaNacimiento?.ToString("yyyy-MM-dd") ?? "";
+            }
+            @Html.LabelFor(model => Model.FechaNacimiento)
+            @Html.TextBoxFor(model => Model.FechaNacimiento, new { @class = "form-control", @type = "date", @Value = fechaIngreso, @min = "1900-01-01", @max = "9999-12-31" })
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(model=>Model.RFC)
+            @Html.TextBoxFor(model=> Model.RFC, new {@class="form-control"})
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(model=>Model.Password)
+            @Html.TextBoxFor(model=> Model.Password, new {@class="form-control", @type="password"})
+        </div>
+    </div>
+    <hr />
+     <div class="row">
+            <div class="col-md-3">
+                <input type="submit" class="btn btn-success" value="Guardar" />
+                <a href="@Url.Action("GetAll","Usuario")" class="btn btn-danger">Cancelar</a>
+            </div>
+        </div>
+    }
+</div>
