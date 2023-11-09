@@ -14,6 +14,4 @@ public partial class Usuario
     public DateTime FechaNacimiento { get; set; }
 
     public string Rfc { get; set; } = null!;
-
-    public virtual ICollection<Estado> IdEstados { get; set; } = new List<Estado>();
 }

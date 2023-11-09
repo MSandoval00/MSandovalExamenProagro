@@ -19,7 +19,7 @@
         </div>
         <div class="col-md-3">
             @{
-                var fechaIngreso = Model.FechaNacimiento?.ToString("yyyy-MM-dd") ?? "";
+                var fechaIngreso = Model.FechaNacimiento;
             }
             @Html.LabelFor(model => Model.FechaNacimiento)
             @Html.TextBoxFor(model => Model.FechaNacimiento, new { @class = "form-control", @type = "date", @Value = fechaIngreso, @min = "1900-01-01", @max = "9999-12-31" })
@@ -36,7 +36,7 @@
     <hr />
      <div class="row">
             <div class="col-md-3">
-                <input type="submit" class="btn btn-success" value="Guardar" />
+                <input type="submit" class="btn btn-success" value="Guardar Usuario" />
                 <a href="@Url.Action("GetAll","Usuario")" class="btn btn-danger">Cancelar</a>
             </div>
         </div>

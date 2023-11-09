@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace ML
 {
-    public class Permisos
+    public class Permiso
     {
         public ML.Usuario? Usuario { get; set; }
         public ML.Estado? Estado { get; set; }
+        public List<object> Permisos { get; set; }
+
     }
 }

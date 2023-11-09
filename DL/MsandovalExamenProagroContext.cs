@@ -19,6 +19,8 @@ public partial class MsandovalExamenProagroContext : DbContext
 
     public virtual DbSet<GeoReferencia> GeoReferencias { get; set; }
 
+    public virtual DbSet<Permiso> Permisos { get; set; }
+
     public virtual DbSet<Usuario> Usuarios { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -57,6 +59,19 @@ public partial class MsandovalExamenProagroContext : DbContext
                 .HasConstraintName("FK__GeoRefere__IdEst__145C0A3F");
         });
 
+        modelBuilder.Entity<Permiso>(entity =>
+        {
+            entity.HasNoKey();
+
+            entity.HasOne(d => d.IdEstadoNavigation).WithMany()
+                .HasForeignKey(d => d.IdEstado)
+                .HasConstraintName("FK__Permisos__IdEsta__35BCFE0A");
+
+            entity.HasOne(d => d.IdUsuarioNavigation).WithMany()
+                .HasForeignKey(d => d.IdUsuario)
+                .HasConstraintName("FK__Permisos__IdUsua__34C8D9D1");
+        });
+
         modelBuilder.Entity<Usuario>(entity =>
         {
             entity.HasKey(e => e.IdUsuario).HasName("PK__Usuario__5B65BF9782282B2F");
@@ -74,23 +89,6 @@ public partial class MsandovalExamenProagroContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("RFC");
-
-            entity.HasMany(d => d.IdEstados).WithMany(p => p.IdUsuarios)
-                .UsingEntity<Dictionary<string, object>>(
-                    "Permiso",
-                    r => r.HasOne<Estado>().WithMany()
-                        .HasForeignKey("IdEstado")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Permisos__IdEsta__182C9B23"),
-                    l => l.HasOne<Usuario>().WithMany()
-                        .HasForeignKey("IdUsuario")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Permisos__IdUsua__173876EA"),
-                    j =>
-                    {
-                        j.HasKey("IdUsuario", "IdEstado").HasName("PK__Permisos__54DEB14BD65DDD8C");
-                        j.ToTable("Permisos");
-                    });
         });
 
         OnModelCreatingPartial(modelBuilder);

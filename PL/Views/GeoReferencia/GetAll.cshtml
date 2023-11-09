@@ -1,0 +1,47 @@
+﻿@model ML.GeoReferencias
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="container text-center">
+        <h2>Registro de GeoReferencias</h2>
+        <a class="btn btn-success" href="@Url.Action("Form","GeoReferencia")">Agregar nueva GeoReferencia</a>
+</div>
+<hr />
+@if (Model.GeoRefereciass.Count>0)
+{
+    <div class="container">
+    <div class="row">
+        <table>
+            <thead>
+                <tr>
+                    <th class="text-center">Actualizar</th>
+                    <th class="text-center">Estado</th>
+                    <th class="text-center">Latitud</th>
+                    <th class="text-center">Longitud</th>
+                    <th class="text-center">Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (ML.GeoReferencias geoReferencias in Model.GeoRefereciass)
+                {
+                <tr class="text-center">
+                    <td><a class="btn btn-warning" href="@Url.Action("Form","GeoReferencia",new {IdGeorreferencia=geoReferencias.IdGeorreferencia})">Actualizar</a></td>
+                    <td>@geoReferencias.Estado.NombreEstado</td>
+                    <td>@geoReferencias.Latitud</td>
+                    <td>@geoReferencias.Longitud</td>
+                    <td><a class="btn btn-danger" href="@Url.Action("Delete","GeoReferencia",new {IdGeorreferencia=geoReferencias.IdGeorreferencia})">Eliminar</a></td>
+                </tr>    
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+}
+else
+{
+<div class="alert alert-warning" role="alert">
+ No hay registros de GeoReferencias
+</div>
+}

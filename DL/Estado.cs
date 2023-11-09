@@ -12,6 +12,4 @@ public partial class Estado
     public string Siglas { get; set; } = null!;
 
     public virtual ICollection<GeoReferencia> GeoReferencia { get; set; } = new List<GeoReferencia>();
-
-    public virtual ICollection<Usuario> IdUsuarios { get; set; } = new List<Usuario>();
 }

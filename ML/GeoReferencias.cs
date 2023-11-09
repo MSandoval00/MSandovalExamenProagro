@@ -12,5 +12,6 @@ namespace ML
         public ML.Estado Estado { get; set; }
         public string? Latitud { get; set; }
         public string? Longitud { get; set; }
+        public List<object> GeoRefereciass { get; set; }
     }
 }

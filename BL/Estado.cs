@@ -13,18 +13,18 @@ namespace BL
             ML.Result result = new ML.Result();
             try
             {
-                using (DL.MsandovalExamenProagroContext context=new DL.MsandovalExamenProagroContext())
+                using (DL.MsandovalExamenProagroContext context = new DL.MsandovalExamenProagroContext())
                 {
-                    var query=context.Estados.FromSqlRaw($"EstadoGetAll").ToList();
+                    var query = context.Estados.FromSqlRaw($"EstadoGetAll").ToList();
                     result.Objects = new List<object>();
-                    if (query!=null)
+                    if (query != null)
                     {
                         foreach (var row in query)
                         {
                             ML.Estado estado = new ML.Estado();
                             estado.IdEstado = row.IdEstado;
-                            estado.NombreEstado=row.NombreEstado;
-                            estado.Siglas=row.Siglas;
+                            estado.NombreEstado = row.NombreEstado;
+                            estado.Siglas = row.Siglas;
                             result.Objects.Add(estado);
                             result.Correct = true;
                         }
@@ -41,7 +41,7 @@ namespace BL
             {
                 result.Correct = false;
                 result.ErrorMessage = ex.Message;
-                result.Ex=ex;
+                result.Ex = ex;
             }
             return result;
         }
