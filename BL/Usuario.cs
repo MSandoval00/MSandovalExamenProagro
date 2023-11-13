@@ -1,6 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace BL
 {
@@ -80,11 +86,40 @@ namespace BL
         public static ML.Result Add(ML.Usuario usuario)
         {
             ML.Result result = new ML.Result();
+            //DateTime fechaNacimiento = DateTime.ParseExact(usuario.FechaNacimiento, "MM/dd/yyyy H:mm", CultureInfo.InvariantCulture);
+
             try
             {
                 using (DL.MsandovalExamenProagroContext context = new DL.MsandovalExamenProagroContext())
                 {
                     var query = context.Database.ExecuteSqlRaw($"UsuarioAdd '{usuario.Password}','{usuario.Nombre}','{usuario.FechaNacimiento}','{usuario.RFC}'");
+                    if (query > 0)
+                    {
+                        result.Correct = true;
+                    }
+                    else
+                    {
+                        result.Correct = false;
+                        result.ErrorMessage = "Los datos no fueron ingresados correctamente";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Correct = false;
+                result.ErrorMessage = ex.Message;
+                result.Ex = ex;
+            }
+            return result;
+        }
+        public static ML.Result AddCargaMasiva(ML.Usuario usuario)
+        {
+            ML.Result result = new ML.Result();
+            try
+            {
+                using (DL.MsandovalExamenProagroContext context = new DL.MsandovalExamenProagroContext())
+                {
+                    var query = context.Database.ExecuteSqlRaw($"UsuarioAddCargaMasiva {usuario.IdUsuario},'{usuario.Password}','{usuario.Nombre}','{usuario.FechaNacimiento}','{usuario.RFC}'");
                     if (query > 0)
                     {
                         result.Correct = true;
@@ -163,11 +198,11 @@ namespace BL
             ML.Result result = new ML.Result();
             try
             {
-                using (DL.MsandovalExamenProagroContext context=new DL.MsandovalExamenProagroContext())
+                using (DL.MsandovalExamenProagroContext context = new DL.MsandovalExamenProagroContext())
                 {
                     var query = context.Usuarios.FromSqlRaw($"UsuarioGetByRFC '{RFC}'").AsEnumerable().Single();
-                    result.Object=new List<object>();
-                    if (query!=null)
+                    result.Object = new List<object>();
+                    if (query != null)
                     {
                         ML.Usuario usuario = new ML.Usuario();
                         usuario.IdUsuario = query.IdUsuario;
@@ -175,16 +210,16 @@ namespace BL
                         usuario.Nombre = query.Nombre;
                         usuario.FechaNacimiento = query.FechaNacimiento.ToString("yyyy-MM-dd");
                         usuario.RFC = query.Rfc;
-                        result.Object=usuario;
-                        result.Correct=true;
+                        result.Object = usuario;
+                        result.Correct = true;
                     }
                 }
             }
             catch (Exception ex)
             {
-                result.Correct=false;
-                result.ErrorMessage=ex.Message;
-                result.Ex=ex;
+                result.Correct = false;
+                result.ErrorMessage = ex.Message;
+                result.Ex = ex;
             }
             return result;
         }
@@ -193,10 +228,10 @@ namespace BL
             ML.Result result = new ML.Result();
             try
             {
-                using (OleDbConnection context = new OleDbConnection(connectioString)) 
+                using (OleDbConnection context = new OleDbConnection(connectioString))
                 {
-                    string query = "SELECT * FROM [Hoja1$]";//nombre del sheet
-                    using (OleDbCommand cmd=new OleDbCommand())
+                    string query = "SELECT * FROM [CAT_USUARIO$]";//nombre del sheet
+                    using (OleDbCommand cmd = new OleDbCommand())
                     {
                         cmd.CommandText = query;
                         cmd.Connection = context;
@@ -205,28 +240,29 @@ namespace BL
 
                         DataTable tableUsuario = new DataTable();
                         da.Fill(tableUsuario);
-                        if (tableUsuario.Rows.Count>0)
+                        if (tableUsuario.Rows.Count > 0)
                         {
                             result.Objects = new List<object>();
                             foreach (DataRow row in tableUsuario.Rows)
                             {
                                 ML.Usuario usuario = new ML.Usuario();
-                                usuario.Password=row[0].ToString();
-                                usuario.Nombre=row[1].ToString();
-                                usuario.FechaNacimiento=row[2].ToString();
-                                usuario.RFC=row[3].ToString();
+                                usuario.IdUsuario =int.Parse(row[0].ToString());
+                                usuario.Password = row[1].ToString();
+                                usuario.Nombre = row[2].ToString();
+                                usuario.FechaNacimiento = row[3].ToString();
+                                usuario.RFC = row[4].ToString();
                                 result.Objects.Add(usuario);
                             }
                             result.Correct = true;
                         }
                         result.Object = tableUsuario;
-                        if (tableUsuario.Rows.Count>0)
+                        if (tableUsuario.Rows.Count >= 0)
                         {
                             result.Correct = true;
                         }
                         else
                         {
-                            result.Correct=false;
+                            result.Correct = false;
                             result.ErrorMessage = "No existen registros en el excel";
                         }
                     }
@@ -242,7 +278,7 @@ namespace BL
         }
         public static ML.Result ValidarExcel(List<object> usuarios)
         {
-            ML.Result result=new ML.Result();
+            ML.Result result = new ML.Result();
             try
             {
                 result.Objects = new List<object>();
@@ -251,23 +287,27 @@ namespace BL
                 {
                     ML.ErrorExcel error = new ML.ErrorExcel();
                     error.IdRegistro = i++;
-                    if (usuario.Password=="")
+                    if (usuario.IdUsuario==0)
+                    {
+                        error.Mensaje += "Ingresa el Id";
+                    }
+                    if (usuario.Password == "")
                     {
                         error.Mensaje += "Ingresar el password, ";
                     }
-                    if (usuario.Nombre=="")
+                    if (usuario.Nombre == "")
                     {
                         error.Mensaje += "Ingresar el nombre, ";
                     }
-                    if (usuario.FechaNacimiento=="")
+                    if (usuario.FechaNacimiento == "")
                     {
                         error.Mensaje += "Ingresar fecha nacimiento, ";
                     }
-                    if (usuario.RFC=="")
+                    if (usuario.RFC == "")
                     {
                         error.Mensaje += "Ingresar RFC, ";
                     }
-                    if (error.Mensaje!=null)
+                    if (error.Mensaje != null)
                     {
                         result.Objects.Add(error);
                     }
@@ -276,12 +316,11 @@ namespace BL
             }
             catch (Exception ex)
             {
-                result.Correct=false ;
+                result.Correct = false;
                 result.ErrorMessage = ex.Message;
                 result.Ex = ex;
             }
             return result;
         }
-
     }
 }

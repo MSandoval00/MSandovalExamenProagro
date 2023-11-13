@@ -7,8 +7,8 @@ namespace PL.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            ML.Result result=BL.GeoReferencias.GetAll();
-            ML.GeoReferencias geoReferencias=new ML.GeoReferencias();
+            ML.Result result = BL.GeoReferencias.GetAll();
+            ML.GeoReferencias geoReferencias = new ML.GeoReferencias();
             geoReferencias.GeoRefereciass = new List<object>();
             if (result.Correct)
             {
@@ -24,9 +24,9 @@ namespace PL.Controllers
         public ActionResult Form(int? IdGeorreferencia)
         {
             ML.GeoReferencias geoReferencias = new ML.GeoReferencias();
-            geoReferencias.GeoRefereciass= new List<object>();
+            geoReferencias.GeoRefereciass = new List<object>();
             ML.Result resultEstados = BL.Estado.GetAll();
-            if (IdGeorreferencia!=null)//Update
+            if (IdGeorreferencia != null)//Update
             {
                 ML.Result result = BL.GeoReferencias.GetById(IdGeorreferencia.Value);
                 if (result.Correct)
@@ -44,12 +44,12 @@ namespace PL.Controllers
         [HttpPost]
         public ActionResult Form(ML.GeoReferencias geoReferencias)
         {
-            if (geoReferencias.IdGeorreferencia==0)//add
+            if (geoReferencias.IdGeorreferencia == 0)//add
             {
                 ML.Result result = BL.GeoReferencias.Add(geoReferencias);
                 if (result.Correct)
                 {
-                    ViewBag.Mensaje = "Se registro correctamente la georeferencia"; 
+                    ViewBag.Mensaje = "Se registro correctamente la georeferencia";
                 }
                 else
                 {

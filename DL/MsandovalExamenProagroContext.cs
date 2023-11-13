@@ -25,7 +25,7 @@ public partial class MsandovalExamenProagroContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-G7UVJH5; Database= MSandovalExamenProagro; TrustServerCertificate=True;Trusted_Connection=True; User ID=sa; Password=pass@word1;");
+        => optionsBuilder.UseSqlServer("Server=DESKTOP-G7UVJH5; Database= MsandovalExamenProagro; TrustServerCertificate=True;Trusted_Connection=True; User ID=sa; Password=pass@word1;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -65,19 +65,20 @@ public partial class MsandovalExamenProagroContext : DbContext
 
             entity.HasOne(d => d.IdEstadoNavigation).WithMany()
                 .HasForeignKey(d => d.IdEstado)
-                .HasConstraintName("FK__Permisos__IdEsta__35BCFE0A");
+                .HasConstraintName("FK__Permisos__IdEsta__3F466844");
 
             entity.HasOne(d => d.IdUsuarioNavigation).WithMany()
                 .HasForeignKey(d => d.IdUsuario)
-                .HasConstraintName("FK__Permisos__IdUsua__34C8D9D1");
+                .HasConstraintName("FK__Permisos__IdUsua__3E52440B");
         });
 
         modelBuilder.Entity<Usuario>(entity =>
         {
-            entity.HasKey(e => e.IdUsuario).HasName("PK__Usuario__5B65BF9782282B2F");
+            entity.HasKey(e => e.IdUsuario).HasName("PK__Usuario__5B65BF9702E46C35");
 
             entity.ToTable("Usuario");
 
+            entity.Property(e => e.IdUsuario).ValueGeneratedNever();
             entity.Property(e => e.FechaNacimiento).HasColumnType("date");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(100)

@@ -7,8 +7,8 @@ namespace PL.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            ML.Result result=BL.Permiso.GetAll();
-            ML.Permiso permiso=new ML.Permiso();
+            ML.Result result = BL.Permiso.GetAll();
+            ML.Permiso permiso = new ML.Permiso();
             permiso.Permisos = new List<object>();
             if (result.Correct)
             {
@@ -26,7 +26,7 @@ namespace PL.Controllers
             ML.Permiso permiso = new ML.Permiso();
             permiso.Permisos = new List<object>();
             ML.Result resultEstado = BL.Estado.GetAll();
-            if (IdUsusario!=null)//Update
+            if (IdUsusario != null)//Update
             {
                 ML.Result result = BL.Usuario.GetById(IdUsusario.Value);
                 if (result.Correct)
@@ -44,10 +44,10 @@ namespace PL.Controllers
         [HttpPost]
         public IActionResult Form(ML.Permiso permiso)
         {
-            permiso.Usuario=new ML.Usuario();
-            if (permiso.Usuario.IdUsuario==0)
-            { 
-                ML.Result result=BL.Permiso.Add(permiso);
+            permiso.Usuario = new ML.Usuario();
+            if (permiso.Usuario.IdUsuario == 0)
+            {
+                ML.Result result = BL.Permiso.Add(permiso);
                 if (result.Correct)
                 {
                     ViewBag.Mensaje = "Se registro correctamente el permiso";
@@ -59,7 +59,7 @@ namespace PL.Controllers
             }
             else
             {
-                ML.Result result=BL.Permiso.Update(permiso);
+                ML.Result result = BL.Permiso.Update(permiso);
                 if (result.Correct)
                 {
                     ViewBag.Mensaje = "Se actualizo correctamente el permiso";

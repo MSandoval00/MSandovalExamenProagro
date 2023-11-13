@@ -87,7 +87,7 @@ namespace PL.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult Login(string RFC,string Password)
+        public ActionResult Login(string RFC, string Password)
         {
             ML.Result result = BL.Usuario.GetByRFC(RFC);
             if (result.Correct)
